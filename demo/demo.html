@@ -64,15 +64,20 @@
 <pre class="prettyprint linenums">
 $("a.toggle").click(function()
 {
-    var sel = $(this).selected();
-    $(this).selected(!sel);
+    var isSelected = $(this).selected();
+    $(this).selected( !isSelected );
 });
 
 var group = $(".pagination a").selectedGroup(function()
 {
-    $(".output").html("button : " + this.index + " selected");
+    var currentIndex    = this.index(),
+        currentItem     = this.item(),
+        allItemsInGroup = this.items();
+        
+    $(".output").html("button : " + currentIndex + " selected");
 });
-$(".pagination a").click(function()
+
+group.items().click(function()
 {
      $(this).selected(true);
 });
@@ -81,23 +86,27 @@ $(".pagination a").click(function()
     </div>
 
     <script src="js/jquery-1.7.1.min.js"></script>
-    <script src="../jquery.engauge.selected.js"></script>
+    <script src="../jquery.selected.js"></script>
     <script>
         
         $(document).ready(function()
         {
-            
             $("a.toggle").click(function()
             {
-                var sel = $(this).selected();
-                $(this).selected(!sel);
+                var isSelected = $(this).selected();
+                $(this).selected( !isSelected );
             });
             
-            $(".pagination a").selectedGroup(function()
+            var group = $(".pagination a").selectedGroup(function()
             {
-                $(".output").html("button : " + this.index + " selected");
+                var currentIndex    = this.index(),
+                    currentItem     = this.item(),
+                    allItemsInGroup = this.items();
+                    
+                $(".output").html("button : " + currentIndex + " selected");
             });
-            $(".pagination a").click(function()
+            
+            group.items().click(function()
             {
                  $(this).selected(true);
             });

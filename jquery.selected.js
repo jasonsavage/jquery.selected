@@ -46,27 +46,30 @@
  * @return a [selectedGroup Object]
  * 
  * [selectedGroup Object]
- * @index [int] - the current selected index
- * @items [Array] - array of html elements in the group
- * @selected [function] - gets the currently selected html element in the group
+ * @index() [function] 	- gets or sets the current selected index
+ * @items() [function] 	- array of html elements in the group
+ * @item() [function] 	- gets the currently selected html element in the group
  * 
  * NOTE: the group object is passed as this to the 'change.selectedGroup' event listener
  * 
  * Example ::
  *  $("ul li").selectedGroup(function() {
- *     this.selected().css("background-color","red");
+ *     this.item().css("background-color","red");
  *  });
  * 
  */
 
 (function ($)
 {
+	$.selectedClass = "selected";
+	
     /**
      * Selected plugin
      */
     $.fn.selected = function (value)
     {
-        if (typeof value === "undefined" || value === null) value = null;
+        if(typeof value === 'undefined' || value === '')
+        	value = null;
         
         //multi element selector action
         if (this.length > 1)
@@ -118,23 +121,40 @@
      */
     $.fn.selectedGroup = function (onChange)
     {
-        //@this = the selector (should be an array on html elements)
+        //@this = the selector (should be an array of html elements)
         
-        if (typeof onChange === "undefined" || onChange === null) onChange = null;
+        onChange = onChange || null;
+        var $this = this;
         
-        var group = {
-            items : $(this).toArray(),
-            index : -1,
-            selected : function()
-            {
-                return $(this.items[this.index]);
-            }
-        }
-
+        var group = (function(elements)
+        {
+        	var _items = elements,
+        		_index = -1;
+        	
+        	// public API
+			return {
+				index : function(value)
+				{
+					if(typeof value === 'number')
+						_index = value;
+					else
+						return _index;
+				},
+				item : function()
+	            {
+	            	return $( _items[_index] );
+	            },
+	            items : function()
+	            {
+	            	return $( _items );
+	            }
+			};
+        }(this));
+        
         if (onChange !== null)
             $(group).on("change.selectedGroup", onChange);
 
-        $(group.items).each(function (index, ele)
+        $(this).each(function (index, ele)
         {
             //@index - the current html element's index in the [group.items] array
             //@ele - the current html element in the array ( currently same as @this )
@@ -142,17 +162,15 @@
             //add a selected listener to each html element in the group
             $(ele).on("selected.selected", function (e)
             {
-                //@this = ele
-                
                 //check if this html element isn't already the selected element in the group
-                if(index != group.index) 
+                if(index != group.index() ) 
                 {
                     //set the group's index equal to this item's index
-                    group.index = index;
+                    group.index(index);
                     
                     //un-select all other html element in the [group.items] array
-                    $(group.items).filter(function(i) {
-                        return (i != group.index);
+                    group.items().filter(function(i) {
+                        return (i != index);
                     }).selected(false);
                     
                     //trigger change event on this group
@@ -161,18 +179,18 @@
             });
         });
         
-        //return the group object as reference
+        //return all the items in the group
         return group;
     };
 
     /* Private */
     function getSelected()
     {
-        return $(this).hasClass("selected");
+        return $(this).hasClass( $.selectedClass );
     }
     function setSelected(value)
     {
-        (value) ? $(this).addClass("selected") : $(this).removeClass("selected");
+        (value) ? $(this).addClass( $.selectedClass ) : $(this).removeClass( $.selectedClass );
     }
 
 } (jQuery));
