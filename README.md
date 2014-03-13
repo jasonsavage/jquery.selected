@@ -7,18 +7,22 @@ This is a small plugin for jQuery used to easily set an html element as selected
 It can be used for tabs, custom radio buttons, pagination, toggle button, slideshow, etc.
 
 ```html
-<a class="toggle" href="#">Click Me!</a>
+<a class="btn" href="#">Click Me!</a>
 ```
 
 ```javascript
-$('.toggle').on('click', function(e)
+$('.btn').on('click', function(e)
 {
-	e.preventDefault();
-	
-	//toggle
-	var isSelected = $(this).selected();
-	$(this).selected( !isSelected );
+	$(this).selected( true );
+
+	//or toggle
+	//$(this).selectedToggle();
 });
+
+//helper
+var isSelected = $('.btn').isSelected();
+
+
 ```
 
 or as a group of buttons when you only want one item marked as selected at a time (radio button group functionality) :
@@ -33,17 +37,19 @@ or as a group of buttons when you only want one item marked as selected at a tim
 ```
 
 ```javascript
-$('.tabs a').selectedGroup()
-			.items()
-			.on('click', function(e) 
-			{ 
-				e.preventDefault();
-				$(this).selected(true); 
-			});
+$('.tabs a').selectedGroup().on('click', function(e) 
+{ 
+	e.preventDefault();
+	$(this).selected(true); 
+});
+
+//helper
+var index = $('.tabs a').selectedGroupIndex();
+
 ```
 
-Also, don't want the class name to be selected :
+Also, if you don't want the class name to be selected :
 
 ```javascript
-$.selectedClass = "active";
+$.selected.className = "active";
 ```

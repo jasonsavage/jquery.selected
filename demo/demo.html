@@ -62,24 +62,21 @@
         </div>
         
 <pre class="prettyprint linenums">
+var isSelected = $(this).isSelected();
+
 $("a.toggle").click(function()
 {
-    var isSelected = $(this).selected();
-    $(this).selected( !isSelected );
+    $(this).selectedToggle();
 });
 
-var group = $(".pagination a").selectedGroup(function()
-{
-    var currentIndex    = this.index(),
-        currentItem     = this.item(),
-        allItemsInGroup = this.items();
-        
-    $(".output").html("button : " + currentIndex + " selected");
-});
-
-group.items().click(function()
+//chain!
+$(".pagination a").click(function()
 {
      $(this).selected(true);
+})
+.selectedGroup(function(currentIndex, currentItem)
+{
+    $(".output").html("button : " + currentIndex + " selected");
 });
 </pre>
         
@@ -93,22 +90,16 @@ group.items().click(function()
         {
             $("a.toggle").click(function()
             {
-                var isSelected = $(this).selected();
-                $(this).selected( !isSelected );
+                 $(this).selectedToggle();
             });
             
-            var group = $(".pagination a").selectedGroup(function()
-            {
-                var currentIndex    = this.index(),
-                    currentItem     = this.item(),
-                    allItemsInGroup = this.items();
-                    
-                $(".output").html("button : " + currentIndex + " selected");
-            });
-            
-            group.items().click(function()
+            $(".pagination a").click(function()
             {
                  $(this).selected(true);
+            })
+            .selectedGroup(function(currentIndex, currentItem)
+            {
+                $(".output").html("button : " + currentIndex + " selected");
             });
         });
 
