@@ -48,7 +48,7 @@ var index = $('.tabs a').selectedGroupIndex();
 
 ```
 
-Also, if you don't want the class name to be selected :
+Also, if you want the class name to be something other than 'selected' :
 
 ```javascript
 $.selected.className = "active";
